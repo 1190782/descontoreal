@@ -9,14 +9,14 @@ Plano completo: @docs/PLANO.md (só local, fora do git)
 - Monorepo pnpm: apps/web (Next.js App Router, TypeScript estrito, Tailwind),
   packages/db (migrações Supabase), packages/core (rótulos e utilitários de preço),
   packages/scrapers (recolha).
-- Supabase (Postgres + Auth), Resend, GitHub Actions, Vercel.
+- Supabase (Postgres + Auth), Resend, GitHub Actions, Cloudflare Workers (site, através do OpenNext).
 
 ## Comandos
 
 - pnpm dev | pnpm test | pnpm lint | pnpm typecheck
 - pnpm scrape --store <loja> [--category <cat>] [--dry-run] [--limit N]
 - pnpm stats
-- pnpm db:migrate | pnpm db:seed
+- pnpm db:migrate | pnpm db:seed | pnpm db:demo (dados inventados, só na base local)
 
 ## Estado das lojas
 
