@@ -10,7 +10,7 @@
     "dev": "pnpm --filter @descontoreal/web dev",
     "build": "pnpm -r --if-present build",
     "test": "pnpm -r --if-present test",
-    "lint": "eslint .",
+    "lint": "pnpm --filter @descontoreal/web cf:typegen && eslint .",
     "typecheck": "pnpm -r --if-present typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
