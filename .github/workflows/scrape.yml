@@ -119,4 +119,7 @@ jobs:
       - name: Calcular rótulos
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # The labels change every day, so every page of the site is revalidated afterwards.
+          SITE_URL: ${{ secrets.SITE_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
         run: pnpm stats

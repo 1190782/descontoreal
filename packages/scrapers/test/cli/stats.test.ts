@@ -4,6 +4,7 @@ import { z } from "zod";
 import { main, type StatsDeps } from "../../src/cli/stats";
 import type { Env } from "../../src/env";
 import { formatStatsSummary, type StatsSummary } from "../../src/jobs/stats";
+import type { RevalidationConfig } from "../../src/runner/revalidate";
 import { FakeStatsDb } from "../jobs/fake-stats-db";
 
 const NOW = new Date("2026-10-29T03:40:00Z");
@@ -22,6 +23,7 @@ interface Setup {
   warnings: string[];
   createDb: Mock<(databaseUrl: string) => Db>;
   runStats: Mock<(db: Db, now: Date) => Promise<StatsSummary>>;
+  revalidate: Mock<(config: RevalidationConfig) => Promise<boolean>>;
 }
 
 function setup(env: Env = { DATABASE_URL }): Setup {
@@ -31,10 +33,12 @@ function setup(env: Env = { DATABASE_URL }): Setup {
   const warnings: string[] = [];
   const createDb = vi.fn<(databaseUrl: string) => Db>(() => db);
   const runStats = vi.fn<(db: Db, now: Date) => Promise<StatsSummary>>(() => Promise.resolve(SUMMARY));
+  const revalidate = vi.fn<(config: RevalidationConfig) => Promise<boolean>>(() => Promise.resolve(true));
   const deps: StatsDeps = {
     loadEnv: () => env,
     createDb,
     runStats,
+    revalidate,
     now: () => NOW,
     log: {
       info: () => undefined,
@@ -50,7 +54,7 @@ function setup(env: Env = { DATABASE_URL }): Setup {
       err.push(text);
     },
   };
-  return { deps, db, out, err, warnings, createDb, runStats };
+  return { deps, db, out, err, warnings, createDb, runStats, revalidate };
 }
 
 function invalidEnvError(): z.ZodError {
@@ -62,6 +66,59 @@ function invalidEnvError(): z.ZodError {
 }
 
 describe("main", () => {
+  const SITE = { DATABASE_URL, SITE_URL: "https://descontoreal.pt", REVALIDATE_SECRET: "segredo" };
+
+  it("asks the site to render every page again after the labels", async () => {
+    // Arrange
+    const { deps, revalidate } = setup(SITE);
+
+    // Act
+    const exitCode = await main(deps);
+
+    // Assert
+    expect(exitCode).toBe(0);
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith(
+      { siteUrl: "https://descontoreal.pt", secret: "segredo" },
+      deps.log,
+    );
+  });
+
+  it("does not revalidate without SITE_URL and REVALIDATE_SECRET", async () => {
+    // Arrange
+    const { deps, revalidate } = setup({ DATABASE_URL, SITE_URL: "https://descontoreal.pt" });
+
+    // Act
+    await main(deps);
+
+    // Assert
+    expect(revalidate).not.toHaveBeenCalled();
+  });
+
+  it("keeps exit code 0 when the revalidation fails: the labels are saved", async () => {
+    // Arrange
+    const { deps, revalidate } = setup(SITE);
+    revalidate.mockResolvedValue(false);
+
+    // Act
+    const exitCode = await main(deps);
+
+    // Assert
+    expect(exitCode).toBe(0);
+  });
+
+  it("does not revalidate when the labels job fails", async () => {
+    // Arrange
+    const { deps, runStats, revalidate } = setup(SITE);
+    runStats.mockRejectedValue(new Error("falhou"));
+
+    // Act
+    const exitCode = await main(deps);
+
+    // Assert
+    expect(exitCode).toBe(1);
+    expect(revalidate).not.toHaveBeenCalled();
+  });
+
   it("runs the stats job, prints the counts per label and closes the database", async () => {
     // Arrange
     const { deps, db, out, err, createDb, runStats } = setup();

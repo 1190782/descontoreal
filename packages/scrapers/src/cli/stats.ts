@@ -5,12 +5,15 @@ import { type Env, loadEnv } from "../env";
 import { errorMessage } from "../http/errors";
 import type { Logger } from "../http/logger";
 import { formatStatsSummary, runStats, type StatsSummary } from "../jobs/stats";
+import { type RevalidationConfig, revalidateEverything } from "../runner/revalidate";
 import { redactSecrets } from "./scrape";
 
 export interface StatsDeps {
   loadEnv: () => Env;
   createDb: (databaseUrl: string) => Db;
   runStats: (db: Db, now: Date) => Promise<StatsSummary>;
+  /** Asks the site to render every page again; logs and returns false when it fails. */
+  revalidate: (config: RevalidationConfig, log: Logger) => Promise<boolean>;
   now: () => Date;
   log: Logger;
   /** Summary and messages for the owner. */
@@ -33,6 +36,10 @@ export async function main(deps: StatsDeps = defaultDeps()): Promise<number> {
     db = deps.createDb(env.DATABASE_URL);
     const summary = await deps.runStats(db, deps.now());
     deps.print(formatStatsSummary(summary));
+    if (env.SITE_URL !== undefined && env.REVALIDATE_SECRET !== undefined) {
+      // Labels and warnings change every day, also for products whose price did not.
+      await deps.revalidate({ siteUrl: env.SITE_URL, secret: env.REVALIDATE_SECRET }, deps.log);
+    }
     return 0;
   } catch (error) {
     deps.printError(`O cálculo dos rótulos falhou: ${redactSecrets(errorMessage(error), env)}`);
@@ -49,6 +56,7 @@ function defaultDeps(): StatsDeps {
     loadEnv,
     createDb,
     runStats,
+    revalidate: revalidateEverything,
     now: () => new Date(),
     log: console,
     print: (text) => console.log(text),

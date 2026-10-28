@@ -24,33 +24,54 @@ export async function revalidateProducts(
   config: RevalidationConfig,
   log: Logger,
 ): Promise<number> {
-  const endpoint = `${config.siteUrl.replace(/\/+$/, "")}/api/revalidate`;
-  const transport = config.transport ?? ((url, init) => fetch(url, init));
   let accepted = 0;
   for (let start = 0; start < slugs.length; start += REVALIDATE_CHUNK_SIZE) {
     const chunk = slugs.slice(start, start + REVALIDATE_CHUNK_SIZE);
-    try {
-      const response = await transport(endpoint, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${config.secret}`,
-          "Content-Type": "application/json",
-          "User-Agent": BOT_USER_AGENT,
-        },
-        body: JSON.stringify({ slugs: chunk }),
-        signal: AbortSignal.timeout(REVALIDATE_TIMEOUT_MS),
-      });
-      // Reading the small reply frees the connection.
-      await response.arrayBuffer();
-      if (response.ok) {
-        accepted += chunk.length;
-      } else {
-        log.warn(`Revalidation of ${chunk.length} product pages failed: HTTP ${response.status}`);
-      }
-    } catch (error) {
-      log.warn(`Revalidation of ${chunk.length} product pages failed: ${errorMessage(error)}`);
+    const failure = await postRevalidation({ slugs: chunk }, config);
+    if (failure === null) {
+      accepted += chunk.length;
+    } else {
+      log.warn(`Revalidation of ${chunk.length} product pages failed: ${failure}`);
     }
   }
   log.info(`Revalidated ${accepted} of ${slugs.length} product pages`);
   return accepted;
+}
+
+/**
+ * Asks the site to render every page again: POST {SITE_URL}/api/revalidate with { all: true }. For after `pnpm stats`,
+ * which changes the labels and warnings of products whose price did not change. Failures are logged, never thrown: a
+ * stale page must not fail the labels job. Returns whether the site accepted.
+ */
+export async function revalidateEverything(config: RevalidationConfig, log: Logger): Promise<boolean> {
+  const failure = await postRevalidation({ all: true }, config);
+  if (failure === null) {
+    log.info("Revalidated every page of the site");
+    return true;
+  }
+  log.warn(`Revalidation of every page failed: ${failure}`);
+  return false;
+}
+
+/** Null when the site answered 2xx; otherwise why not, without the secret. */
+async function postRevalidation(body: object, config: RevalidationConfig): Promise<string | null> {
+  const endpoint = `${config.siteUrl.replace(/\/+$/, "")}/api/revalidate`;
+  const transport = config.transport ?? ((url, init) => fetch(url, init));
+  try {
+    const response = await transport(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.secret}`,
+        "Content-Type": "application/json",
+        "User-Agent": BOT_USER_AGENT,
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(REVALIDATE_TIMEOUT_MS),
+    });
+    // Reading the small reply frees the connection.
+    await response.arrayBuffer();
+    return response.ok ? null : `HTTP ${response.status}`;
+  } catch (error) {
+    return errorMessage(error);
+  }
 }

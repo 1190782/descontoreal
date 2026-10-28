@@ -1,7 +1,7 @@
 import { BOT_USER_AGENT } from "@descontoreal/core";
 import { describe, expect, it } from "vitest";
 import type { Logger } from "../../src/http/logger";
-import { REVALIDATE_CHUNK_SIZE, revalidateProducts } from "../../src/runner/revalidate";
+import { REVALIDATE_CHUNK_SIZE, revalidateEverything, revalidateProducts } from "../../src/runner/revalidate";
 import { fakeTransport, jsonResponse } from "../fakes/fake-transport";
 
 const ENDPOINT = "https://descontoreal.test/api/revalidate";
@@ -81,5 +81,39 @@ describe("revalidateProducts", () => {
       "Revalidation of 200 product pages failed: HTTP 401",
       "Revalidation of 200 product pages failed: fetch failed",
     ]);
+  });
+});
+
+describe("revalidateEverything", () => {
+  it("posts { all: true } with the bearer secret", async () => {
+    // Arrange
+    const { transport, calls } = fakeTransport({ [ENDPOINT]: jsonResponse("{}") });
+
+    // Act
+    const accepted = await revalidateEverything(
+      { siteUrl: "https://descontoreal.test/", secret: "segredo", transport },
+      recordingLog(),
+    );
+
+    // Assert
+    expect(accepted).toBe(true);
+    expect(calls.map((call) => [call.url, call.init.body])).toEqual([[ENDPOINT, '{"all":true}']]);
+    expect(new Headers(calls[0]?.init.headers).get("authorization")).toBe("Bearer segredo");
+  });
+
+  it("logs a refusal without the secret and never throws", async () => {
+    // Arrange
+    const { transport } = fakeTransport({ [ENDPOINT]: jsonResponse("{}", 401) });
+    const log = recordingLog();
+
+    // Act
+    const accepted = await revalidateEverything(
+      { siteUrl: "https://descontoreal.test", secret: "segredo", transport },
+      log,
+    );
+
+    // Assert
+    expect(accepted).toBe(false);
+    expect(log.warnings).toEqual(["Revalidation of every page failed: HTTP 401"]);
   });
 });
