@@ -17,22 +17,21 @@
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "descontoreal-next-cache",
+      "bucket_name": "escontoreal-next-cache",
     },
   ],
   "d1_databases": [
     {
       "binding": "NEXT_TAG_CACHE_D1",
       "database_name": "descontoreal-next-tags",
-      // PENDING: the id of the descontoreal-next-tags D1 database.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "8852d340-1d93-469d-8e4f-ea9fd5742c26",
     },
   ],
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      // PENDING: the id of the descontoreal-db Hyperdrive configuration.
-      "id": "00000000000000000000000000000000",
+      // descontoreal-db: the web_ro role through Supabase's Session pooler, caching off.
+      "id": "d6d66bf053cb4a9b9f393427cdb03b97",
       // next dev: the local PGlite database (pnpm db:local).
       "localConnectionString": "postgresql://postgres:postgres@127.0.0.1:54329/postgres",
     },
