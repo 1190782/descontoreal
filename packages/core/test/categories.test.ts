@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { CATEGORIES, getCategory, isCategorySlug, type Category, type CategorySlug } from "../src/categories";
+import {
+  CATEGORIES,
+  categoryAndChildren,
+  getCategory,
+  isCategorySlug,
+  type Category,
+  type CategorySlug,
+} from "../src/categories";
 import { slugify } from "../src/normalize";
 
 const ALL: readonly Category[] = CATEGORIES;
@@ -113,5 +120,23 @@ describe("getCategory", () => {
 
     // Assert
     expect(read).toThrow("Unknown category: carros");
+  });
+});
+
+describe("categoryAndChildren", () => {
+  it("returns a top category with its children", () => {
+    // Act
+    const slugs = categoryAndChildren("gaming");
+
+    // Assert
+    expect(slugs).toEqual(["gaming", "consolas"]);
+  });
+
+  it("returns a leaf category alone", () => {
+    // Act
+    const slugs = categoryAndChildren("televisores");
+
+    // Assert
+    expect(slugs).toEqual(["televisores"]);
   });
 });

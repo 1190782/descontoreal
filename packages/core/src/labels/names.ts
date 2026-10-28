@@ -32,3 +32,7 @@ export const WARNING_NAMES: Readonly<Record<WarningCode, string>> = {
   mais_barato_noutra_loja: "Mais barato noutra loja",
   esgotado: "Esgotado",
 };
+
+export function isLabelCode(value: string): value is LabelCode {
+  return Object.hasOwn(LABEL_NAMES, value);
+}

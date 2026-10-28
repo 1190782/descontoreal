@@ -82,3 +82,11 @@ export function getCategory(slug: CategorySlug): Category {
   }
   return category;
 }
+
+/** The category and, for a top category, its children: the categories whose products its page lists. */
+export function categoryAndChildren(slug: CategorySlug): CategorySlug[] {
+  return [
+    slug,
+    ...CATEGORIES.filter((category) => category.parent === slug).map((category) => category.slug),
+  ];
+}

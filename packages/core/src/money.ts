@@ -46,6 +46,14 @@ export function formatCents(cents: number): string {
   return EURO_FORMAT.format(cents / 100);
 }
 
+/** Cents as a decimal string for structured data, e.g. 44999 → "449.99" (no floating point). */
+export function centsToDecimal(cents: number): string {
+  if (!Number.isInteger(cents) || cents < 0) {
+    throw new Error(`Expected a non-negative whole number of cents, got ${cents}`);
+  }
+  return `${Math.floor(cents / 100)}.${String(cents % 100).padStart(2, "0")}`;
+}
+
 /** How much lower `toCents` is than `fromCents`, in percent: (from − to) / from × 100. */
 export function percentBelow(fromCents: number, toCents: number): number {
   if (fromCents <= 0) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LABEL_NAMES, LABEL_TONES, WARNING_NAMES } from "../../src/labels/names";
+import { isLabelCode, LABEL_NAMES, LABEL_TONES, WARNING_NAMES } from "../../src/labels/names";
 
 describe("LABEL_NAMES", () => {
   it("names every label as the plan does", () => {
@@ -61,5 +61,20 @@ describe("WARNING_NAMES", () => {
 
     // Assert
     expect(names).toEqual(expected);
+  });
+});
+
+describe("isLabelCode", () => {
+  it.each([
+    ["desconto_real", true],
+    ["preco_habitual", true],
+    ["desconto-real", false],
+    ["falso", false],
+  ])("isLabelCode(%j) is %s", (value, expected) => {
+    // Act
+    const result = isLabelCode(value);
+
+    // Assert
+    expect(result).toBe(expected);
   });
 });

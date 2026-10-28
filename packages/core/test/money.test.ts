@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  centsToDecimal,
   decimalToCents,
   formatCents,
   formatPercent,
@@ -202,5 +203,28 @@ describe("formatSignedPercent", () => {
 
     // Assert
     expect(text).toBe(expected);
+  });
+});
+
+describe("centsToDecimal", () => {
+  it.each([
+    [44_999, "449.99"],
+    [5, "0.05"],
+    [100_000, "1000.00"],
+    [0, "0.00"],
+  ])("writes %i cents as %j", (cents, expected) => {
+    // Act
+    const decimal = centsToDecimal(cents);
+
+    // Assert
+    expect(decimal).toBe(expected);
+  });
+
+  it.each([[1.5], [-1]])("rejects %j", (cents) => {
+    // Act
+    const write = (): string => centsToDecimal(cents);
+
+    // Assert
+    expect(write).toThrow("non-negative whole number of cents");
   });
 });

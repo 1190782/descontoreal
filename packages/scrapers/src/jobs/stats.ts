@@ -1,8 +1,10 @@
 import {
-  calendarDaysBetween,
   type Classification,
   classify,
   computeWindowStats,
+  currentIntervalOf,
+  isCurrentOffer,
+  isLabelCode,
   LABEL_NAMES,
   type LabelCode,
   type OtherStoreOffer,
@@ -10,9 +12,6 @@ import {
   type StoreSlug,
 } from "@descontoreal/core";
 import type { Db, ListingStatsRow, PriceHistory } from "@descontoreal/db";
-
-/** Lisbon calendar days after its last sighting during which a listing's price still counts as an offer. */
-const OFFER_MAX_AGE_DAYS = 1;
 
 export interface StatsSummary {
   /** Listings classified, per label; labels no listing got are absent. */
@@ -76,15 +75,22 @@ async function loadAllHistories(db: Db): Promise<PriceHistory[]> {
 }
 
 function currentInterval(history: PriceHistory): PriceInterval | undefined {
-  return history.intervals.find((interval) => interval.validTo === null);
+  return currentIntervalOf(history.intervals);
 }
 
-/** Offers still on sale (isOnSale), keyed by product id. */
+/** Offers still on sale (core isCurrentOffer), keyed by product id. */
 function currentOffersByProduct(histories: readonly PriceHistory[], now: Date): Map<number, CurrentOffer[]> {
   const offers = new Map<number, CurrentOffer[]>();
   for (const history of histories) {
     const current = currentInterval(history);
-    if (history.productId === null || current === undefined || !isOnSale(history, current, now)) {
+    if (
+      history.productId === null ||
+      current === undefined ||
+      !isCurrentOffer(
+        { inStock: current.inStock, missedRuns: history.missedRuns, lastSeenAt: history.lastSeenAt },
+        now,
+      )
+    ) {
       continue;
     }
     const offer: CurrentOffer = {
@@ -100,19 +106,6 @@ function currentOffersByProduct(histories: readonly PriceHistory[], now: Date): 
     }
   }
   return offers;
-}
-
-/**
- * In stock, priced by the last complete run (one that saw it without a price counts as missing it), and priced
- * today or yesterday in Lisbon: a store whose run failed today still counts, but a price the store may have
- * changed since is never quoted.
- */
-function isOnSale(history: PriceHistory, current: PriceInterval, now: Date): boolean {
-  return (
-    current.inStock &&
-    history.missedRuns === 0 &&
-    calendarDaysBetween(history.lastSeenAt, now) <= OFFER_MAX_AGE_DAYS
-  );
 }
 
 /** Lowest price on sale of the same product in another store; null for a listing without a product. */
@@ -151,8 +144,4 @@ function toStatsRow(history: PriceHistory, classification: Classification, now: 
     details: { ...classification },
     realDiscountPct: classification.numbers.realDiscountPct,
   };
-}
-
-function isLabelCode(value: string): value is LabelCode {
-  return Object.hasOwn(LABEL_NAMES, value);
 }
