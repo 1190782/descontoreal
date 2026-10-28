@@ -1,9 +1,10 @@
 import {
   activeStores,
+  formatList,
   LABEL_NAMES,
   LABEL_TONES,
-  LABELS_CONFIG,
   type LabelCode,
+  LABELS_CONFIG,
   type LabelTone,
   SITE,
   WARNING_NAMES,
@@ -12,7 +13,6 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { formatList } from "@/lib/text";
 
 export const metadata: Metadata = {
   title: "Como funciona: regras dos rótulos de desconto",

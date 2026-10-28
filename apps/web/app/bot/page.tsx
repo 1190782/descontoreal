@@ -1,7 +1,6 @@
-import { activeStores, BOT_POLICY, BOT_USER_AGENT, SITE } from "@descontoreal/core";
+import { activeStores, BOT_POLICY, BOT_USER_AGENT, formatList, SITE } from "@descontoreal/core";
 import type { Metadata } from "next";
 import type { ReactElement } from "react";
-import { formatList } from "@/lib/text";
 
 export const metadata: Metadata = {
   title: "DescontoRealBot: quem recolhe os preços",

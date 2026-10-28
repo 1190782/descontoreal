@@ -6,7 +6,8 @@ const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  // Product photos come straight from the stores (Darty's Shopify CDN, Radio Popular's file server).
+  "img-src 'self' data: https://darty.pt https://cdn.shopify.com https://lojae-s3-prd-files.radiopopular.pt",
   "font-src 'self'",
   "connect-src 'self'",
   "manifest-src 'self'",
@@ -28,6 +29,14 @@ const SECURITY_HEADERS = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Its workerd build (cloudflare:sockets) only gets used when Next leaves it unbundled.
+  serverExternalPackages: ["postgres"],
+  images: {
+    loader: "custom",
+    loaderFile: "./image-loader.ts",
+    deviceSizes: [640, 828, 1080, 1200],
+    imageSizes: [96, 160, 256, 384],
+  },
   headers() {
     // next dev needs eval for Fast Refresh, which the policy blocks.
     if (process.env.NODE_ENV !== "production") {

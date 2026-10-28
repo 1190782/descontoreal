@@ -14,6 +14,29 @@
       "service": "descontoreal-web",
     },
   ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "descontoreal-next-cache",
+    },
+  ],
+  "d1_databases": [
+    {
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_name": "descontoreal-next-tags",
+      // PENDING: the id of the descontoreal-next-tags D1 database.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+    },
+  ],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      // PENDING: the id of the descontoreal-db Hyperdrive configuration.
+      "id": "00000000000000000000000000000000",
+      // next dev: the local PGlite database (pnpm db:local).
+      "localConnectionString": "postgresql://postgres:postgres@127.0.0.1:54329/postgres",
+    },
+  ],
   // The workers.dev address serves the site until descontoreal.pt is on Cloudflare.
   "workers_dev": true,
   "preview_urls": false,

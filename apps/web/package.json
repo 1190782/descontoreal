@@ -5,17 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm cf:typegen && next build",
     "start": "next start",
-    "typecheck": "next typegen && tsc --noEmit -p .",
+    "test": "vitest run",
+    "typecheck": "pnpm cf:typegen && next typegen && tsc --noEmit -p .",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@descontoreal/core": "workspace:*",
+    "@descontoreal/db": "workspace:*",
     "@opennextjs/cloudflare": "^1.20.13",
     "next": "^16.4.3",
+    "postgres": "^3.4.9",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

@@ -1,7 +1,6 @@
-import { activeStores, SITE } from "@descontoreal/core";
+import { activeStores, formatList, SITE } from "@descontoreal/core";
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { formatList } from "@/lib/text";
 
 const LINKS = [
   { href: "/como-funciona", label: "Como funciona" },

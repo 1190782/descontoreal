@@ -8,6 +8,7 @@ coverage/
 .wrangler/
 .dev.vars*
 next-env.d.ts
+cloudflare-env.d.ts
 .env
 .env.*
 !.env.example
