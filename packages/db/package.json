@@ -5,14 +5,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./local": "./src/local/index.ts"
+    "./local": "./src/local/index.ts",
+    "./web": "./src/web/index.ts"
   },
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p .",
     "migrate": "tsx src/cli/migrate.ts",
     "seed": "tsx src/cli/seed.ts",
-    "local": "tsx src/cli/local-db.ts"
+    "local": "tsx src/cli/local-db.ts",
+    "demo": "tsx src/cli/demo.ts"
   },
   "dependencies": {
     "@descontoreal/core": "workspace:*",

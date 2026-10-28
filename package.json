@@ -18,6 +18,7 @@
     "stats": "pnpm --filter @descontoreal/scrapers stats",
     "db:migrate": "pnpm --filter @descontoreal/db migrate",
     "db:seed": "pnpm --filter @descontoreal/db seed",
+    "db:demo": "pnpm --filter @descontoreal/db demo",
     "db:local": "pnpm --filter @descontoreal/db local"
   },
   "devDependencies": {
