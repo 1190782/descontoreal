@@ -1,0 +1,35 @@
+{
+  "name": "descontoreal",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @descontoreal/web dev",
+    "build": "pnpm -r --if-present build",
+    "test": "pnpm -r --if-present test",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "scrape": "pnpm --filter @descontoreal/scrapers scrape",
+    "stats": "pnpm --filter @descontoreal/scrapers stats",
+    "db:migrate": "pnpm --filter @descontoreal/db migrate",
+    "db:seed": "pnpm --filter @descontoreal/db seed",
+    "db:local": "pnpm --filter @descontoreal/db local"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

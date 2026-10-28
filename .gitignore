@@ -1,0 +1,17 @@
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+.vercel/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+# Saída local de testes e dry-runs
+.cache/
+tmp/
+# O plano tem estratégia e dados pessoais: fica só local
+docs/PLANO.md
+DescontoRealPlan.md

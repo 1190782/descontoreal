@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+**/fixtures/**
+**/.next/**
+**/coverage/**
+docs/PLANO.md
+DescontoRealPlan.md
