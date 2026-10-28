@@ -1,0 +1,23 @@
+{
+  "product": {
+    "title": "Smart TV Hisense 65\" Mini LED Hi-QLED UHD 4K 65E8S - 165 cm",
+    "vendor": "Hisense",
+    "product_type": "Televisores",
+    "handle": "smart-tv-hisense-65-mini-led-hi-qled-uhd-4k-65e8s-165-cm-6942351434773",
+    "variants": [
+      {
+        "id": 47401273557132,
+        "title": "Default Title",
+        "price": "999.99",
+        "sku": "T00245587",
+        "compare_at_price": "999.99",
+        "barcode": "6942351434773"
+      }
+    ],
+    "images": [
+      {
+        "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_dd9f9b72-afa8-4d61-8a69-2b1d4262d35d.jpg?v=1791970390"
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@descontoreal/scrapers",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p .",
+    "scrape": "tsx src/cli/scrape.ts",
+    "stats": "tsx src/cli/stats.ts"
+  },
+  "dependencies": {
+    "@descontoreal/core": "workspace:*",
+    "@descontoreal/db": "workspace:*",
+    "cheerio": "^1.2.0",
+    "iconv-lite": "^0.7.3",
+    "resend": "^6.30.0",
+    "robots-parser": "^3.0.1",
+    "zod": "^4.6.0"
+  }
+}

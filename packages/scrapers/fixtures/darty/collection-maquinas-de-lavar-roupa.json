@@ -1,0 +1,224 @@
+{
+  "products": [
+    {
+      "title": "Máquina de Lavar Roupa Jocel JLR014177 | 8 Kg | 1200 RPM | A | Branco",
+      "handle": "jocel-jlr014177-mlr-8kg-branca-a",
+      "vendor": "Jocel",
+      "product_type": "Máquinas de Lavar Roupa",
+      "variants": [
+        {
+          "id": 44126761418892,
+          "title": "Default Title",
+          "sku": "T00162744",
+          "featured_image": null,
+          "available": true,
+          "price": "299.99",
+          "compare_at_price": "299.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_e9e5295e-ce4f-4589-93df-a687e1cf3bb4.jpg?v=1750299116"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar Roupa Proline FP6120DWHPT | 6 Kg | 1200 RPM | D | Branco",
+      "handle": "proline-fp6120dwhpt-maq-lavar-roupa",
+      "vendor": "Proline",
+      "product_type": "Máquinas de Lavar Roupa",
+      "variants": [
+        {
+          "id": 44126596104332,
+          "title": "Default Title",
+          "sku": "T00140542",
+          "featured_image": null,
+          "available": false,
+          "price": "209.99",
+          "compare_at_price": "209.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_24b1e967-3b1f-40d3-b415-41d333dd2497.jpg?v=1750117125"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar Roupa Samsung WW90CGC04DAEEP | 9 Kg | 1400 RPM | A | Branco",
+      "handle": "maquina-lavar-roupa-samsung-ww90cgc04dae-ep-9kg-1200rpm-a",
+      "vendor": "Samsung",
+      "product_type": "Máquinas de Lavar Roupa",
+      "variants": [
+        {
+          "id": 44125616177292,
+          "title": "Default Title",
+          "sku": "T00100854",
+          "featured_image": null,
+          "available": true,
+          "price": "689.99",
+          "compare_at_price": "689.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_35afcf0e-1261-4ee7-a93b-6588a9766cf9.jpg?v=1750245784"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar Roupa Indesit IMA 762 MYTIME SPT| 7 Kg | 1200 RPM | A | Branco",
+      "handle": "indesit-ima-762-mytime-spt-mlr-7kg",
+      "vendor": "Indesit",
+      "product_type": "Máquinas de Lavar Roupa",
+      "variants": [
+        {
+          "id": 44126757617804,
+          "title": "Default Title",
+          "sku": "T00163521",
+          "featured_image": null,
+          "available": true,
+          "price": "369.00",
+          "compare_at_price": "369.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_781b93c9-78af-42cb-ac15-8c17748b14c8.jpg?v=1750443169"
+        }
+      ]
+    },
+    {
+      "title": "Fogão Elétrico Indesit I6VMH2A(X)/NL | 85x60x60 cm | 4 Bocas | A | Aço inoxidável",
+      "handle": "fogao-eletrico-indesit-i6vmh2a-x-nl-85x60x60-cm-4-bocas-a-aco-inoxidavel-8007842845723",
+      "vendor": "Indesit",
+      "product_type": "Fogões Elétricos",
+      "variants": [
+        {
+          "id": 44125067477132,
+          "title": "Default Title",
+          "sku": "T00085817",
+          "featured_image": null,
+          "available": false,
+          "price": "589.00",
+          "compare_at_price": "589.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_7cae5ba5-a5e0-44be-bb7b-3481653c5a99.jpg?v=1771001516"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar e Secar Roupa LG WT1210BBF | 12/10Kg | 1400 RPM - Preto",
+      "handle": "maquina-lavar-e-secar-roupa-lg-wt1210bbf-preto-cinza-12-10kg-1400rpm-a-a",
+      "vendor": "LG",
+      "product_type": "Máquinas de Lavar e Secar Roupa",
+      "variants": [
+        {
+          "id": 44125623386252,
+          "title": "Default Title",
+          "sku": "T00096160",
+          "featured_image": null,
+          "available": true,
+          "price": "2699.99",
+          "compare_at_price": "2699.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_148d8aec-c1c8-42d7-97e1-f1ac579c7350.jpg?v=1750256534"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar Roupa Encastre Whirlpool BI WMWG 91485 EU | 9 Kg | 1400 RPM | B | Branco",
+      "handle": "maquina-lavar-roupa-encastre-whirlpool-bi-wmwg-91485-eu-9kg-1400rpm",
+      "vendor": "Whirlpool",
+      "product_type": "Máquinas de Lavar Roupa de Encastre",
+      "variants": [
+        {
+          "id": 44125578723468,
+          "title": "Default Title",
+          "sku": "T00096648",
+          "featured_image": null,
+          "available": true,
+          "price": "699.99",
+          "compare_at_price": "699.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_77237cf6-65f8-43df-9b97-3daa5be07918.jpg?v=1750317083"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar e Secar Roupa Jocel JMLSR014191 | 10/6 Kg | 1400RPM | E | Branco",
+      "handle": "jocel-jmlsr014191-mlsr-10-6kg-1400r",
+      "vendor": "Jocel",
+      "product_type": "Máquinas de Lavar e Secar Roupa",
+      "variants": [
+        {
+          "id": 44126529290380,
+          "title": "Default Title",
+          "sku": "2722560",
+          "featured_image": null,
+          "available": true,
+          "price": "499.99",
+          "compare_at_price": "499.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_49a6e1bc-001b-4487-98b8-9679ced74122.jpg?v=1750255925"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar Roupa Encastrável Haier HWB100-B14858U1 Série 8 | 10 Kg | 1400 RPM - Branco",
+      "handle": "maquina-de-lavar-roupa-encastravel-haier-hwb100-b14858u1-serie-8-10-kg-1400-rpm-branco-6921081518977",
+      "vendor": "Haier",
+      "product_type": "Máquinas de Lavar Roupa de Encastre",
+      "variants": [
+        {
+          "id": 47024497524876,
+          "title": "Default Title",
+          "sku": "T00241688",
+          "featured_image": null,
+          "available": true,
+          "price": "899.99",
+          "compare_at_price": "899.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_0e936d77-b6a0-4d66-8c53-1888d9281a9a.jpg?v=1775131303"
+        }
+      ]
+    },
+    {
+      "title": "Máquina de Lavar e Secar Roupa Encastrável Candy BC4S495M4D8-S | 9/5 Kg | 1400 RPM | D | Branco",
+      "handle": "maquina-de-lavar-e-secar-roupa-encastravel-candy-bc4s495m4d8-s-9-5-kg-1400-rpm-d-branco-8059019109602",
+      "vendor": "Candy",
+      "product_type": "Máquinas de Lavar e Secar Roupa de Encastre",
+      "variants": [
+        {
+          "id": 45383618560140,
+          "title": "Default Title",
+          "sku": "2786541",
+          "featured_image": null,
+          "available": true,
+          "price": "599.99",
+          "compare_at_price": "599.99"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://cdn.shopify.com/s/files/1/0703/2684/5580/files/1505-1_1c7b4258-44a3-497c-a3fa-6647bb2eaabc.jpg?v=1773147841"
+        }
+      ]
+    }
+  ]
+}
