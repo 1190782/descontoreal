@@ -1,0 +1,35 @@
+name: Manter o agendamento ativo
+
+# In public repositories, GitHub disables scheduled workflows after 60 days without activity.
+on:
+  schedule:
+    - cron: "30 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  keepalive:
+    name: Commit vazio semanal
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # Scheduled runs carry no repository payload, but they always run on the default branch.
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.DEFAULT_BRANCH }}
+
+      - name: Criar e enviar o commit vazio
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty --message "chore: keepalive"
+          git push origin "HEAD:refs/heads/${DEFAULT_BRANCH}"

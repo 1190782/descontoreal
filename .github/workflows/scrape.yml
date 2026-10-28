@@ -1,0 +1,122 @@
+name: Recolha diária
+
+on:
+  schedule:
+    # 03:00 UTC is night in Lisbon (03:00 in winter, 04:00 in summer).
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      store:
+        description: Loja a recolher
+        type: choice
+        options:
+          - todas
+          - darty
+          - radiopopular
+        default: todas
+      limit:
+        description: Parar depois de N artigos (vazio = sem limite)
+        type: string
+        required: false
+      dry_run:
+        description: Simulação (não grava nada na base de dados)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  scrape:
+    name: Recolha (${{ matrix.store }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      matrix:
+        # Scheduled runs and "todas" get every store; a manual run for one store creates only that job.
+        # (A job-level `if` cannot read `matrix`, so the list itself is filtered.)
+        store: ${{ fromJSON(inputs.store && inputs.store != 'todas' && format('["{0}"]', inputs.store) || '["darty", "radiopopular"]') }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Recolher preços
+        env:
+          STORE: ${{ matrix.store }}
+          LIMIT: ${{ inputs.limit }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          # Resend's SDK logs whole API errors, email addresses included, unless NODE_ENV is production.
+          # Only on this step: an install with NODE_ENV=production leaves out devDependencies such as tsx.
+          NODE_ENV: production
+        run: |
+          if [[ ! "$STORE" =~ ^[a-z0-9]+$ ]]; then
+            echo "::error::Loja inválida."
+            exit 1
+          fi
+          # Fetching stops at 320 min and the run ends as partial, so saving and the report fit in timeout-minutes.
+          args=(--store "$STORE" --max-minutes 320)
+          if [[ -n "$LIMIT" ]]; then
+            if [[ ! "$LIMIT" =~ ^[1-9][0-9]{0,6}$ ]]; then
+              echo "::error::O limite tem de ser um número inteiro positivo."
+              exit 1
+            fi
+            args+=(--limit "$LIMIT")
+          fi
+          if [[ "$DRY_RUN" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          pnpm scrape "${args[@]}"
+
+  stats:
+    name: Rótulos e estatísticas
+    # Waits for every store, Darty's long run included, and runs even when one failed or ended partial:
+    # the other prices still need fresh labels.
+    needs: scrape
+    if: ${{ !cancelled() && !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Calcular rótulos
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pnpm stats
