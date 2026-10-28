@@ -1,5 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { BOT_USER_AGENT } from "@descontoreal/core";
+import { BOT_POLICY, BOT_USER_AGENT } from "@descontoreal/core";
 import type { StoreScraper } from "../types";
 import { detectBotChallenge } from "./challenge";
 import { decodeBody } from "./decode";
@@ -75,12 +75,12 @@ type FetcherSettings = Required<
 >;
 
 export const FETCHER_DEFAULTS: FetcherSettings = {
-  minDelayMs: 2000,
-  maxDelayMs: 5000,
+  minDelayMs: BOT_POLICY.minDelayMs,
+  maxDelayMs: BOT_POLICY.maxDelayMs,
   timeoutMs: 30_000,
   maxAttempts: 3,
   retryBaseDelayMs: 5000,
-  maxRetryAfterMs: 120_000,
+  maxRetryAfterMs: BOT_POLICY.maxRetryAfterMs,
   blockThreshold: 3,
   failureThreshold: 5,
 };

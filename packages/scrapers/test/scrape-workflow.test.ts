@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { BOT_POLICY } from "@descontoreal/core";
 import { describe, expect, it } from "vitest";
 
 const LINES = readFileSync(new URL("../../../.github/workflows/scrape.yml", import.meta.url), "utf8").split(
@@ -23,6 +24,14 @@ function stepLines(name: string): string[] {
 }
 
 describe("scrape.yml", () => {
+  it("starts the daily collection at the hour the bot page states (BOT_POLICY)", () => {
+    // Act
+    const crons = LINES.flatMap((line) => /^\s*- cron: "(.+)"\s*$/.exec(line)?.[1] ?? []);
+
+    // Assert
+    expect(crons).toEqual([`0 ${BOT_POLICY.dailyRunHourUtc} * * *`]);
+  });
+
   it("collects with NODE_ENV=production, so the Resend SDK never prints an API error in the public log", () => {
     // Act
     const lines = stepLines("Recolher preços");

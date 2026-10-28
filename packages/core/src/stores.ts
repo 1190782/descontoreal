@@ -15,6 +15,11 @@ export const STORES = [
 
 export type StoreSlug = (typeof STORES)[number]["slug"];
 
+/** Stores we collect today, in STORES order. */
+export function activeStores(): StoreInfo[] {
+  return STORES.filter((store) => store.active);
+}
+
 export function isStoreSlug(value: string): value is StoreSlug {
   return STORES.some((store) => store.slug === value);
 }

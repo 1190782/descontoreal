@@ -9,6 +9,7 @@ describe("SITE", () => {
       domain: "descontoreal.pt",
       url: "https://descontoreal.pt",
       tagline: "Histórico de preços das lojas portuguesas",
+      contactEmail: "contacto@descontoreal.pt",
     };
 
     // Act

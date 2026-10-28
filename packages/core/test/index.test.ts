@@ -30,6 +30,9 @@ describe("package entry point", () => {
       "getCategory",
       "isStoreSlug",
       "getStore",
+      "activeStores",
+      "organizationJsonLd",
+      "serializeJsonLd",
     ];
     const exports: Record<string, unknown> = core;
 
@@ -52,6 +55,7 @@ describe("package entry point", () => {
       "STORES",
       "SITE",
       "BOT_USER_AGENT",
+      "BOT_POLICY",
       "DAY_MS",
       "TIME_ZONE",
     ];

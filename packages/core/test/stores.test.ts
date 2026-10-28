@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { STORES, getStore, isStoreSlug, type StoreInfo, type StoreSlug } from "../src/stores";
+import { STORES, activeStores, getStore, isStoreSlug, type StoreInfo, type StoreSlug } from "../src/stores";
 
 const ALL: readonly StoreInfo[] = STORES;
 
@@ -35,6 +35,19 @@ describe("STORES", () => {
 
     // Assert
     expect(invalid).toEqual([]);
+  });
+});
+
+describe("activeStores", () => {
+  it("returns the stores we collect, in STORES order", () => {
+    // Arrange
+    const expected = ["radiopopular", "darty"];
+
+    // Act
+    const stores = activeStores();
+
+    // Assert
+    expect(stores.map((store) => store.slug)).toEqual(expected);
   });
 });
 

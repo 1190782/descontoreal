@@ -1,4 +1,4 @@
-import { BOT_USER_AGENT } from "@descontoreal/core";
+import { BOT_POLICY, BOT_USER_AGENT } from "@descontoreal/core";
 import { describe, expect, it } from "vitest";
 import {
   FetchError,
@@ -6,7 +6,7 @@ import {
   RobotsUnavailableError,
   StoreBlockedError,
 } from "../../src/http/errors";
-import { type FetcherOptions, StoreFetcher } from "../../src/http/fetcher";
+import { FETCHER_DEFAULTS, type FetcherOptions, StoreFetcher } from "../../src/http/fetcher";
 import type { Logger } from "../../src/http/logger";
 import {
   fakeTransport,
@@ -262,6 +262,18 @@ describe("StoreFetcher robots.txt", () => {
 });
 
 describe("StoreFetcher pacing", () => {
+  it("paces and backs off by default as the bot page says (BOT_POLICY)", () => {
+    // Act
+    const { minDelayMs, maxDelayMs, maxRetryAfterMs } = FETCHER_DEFAULTS;
+
+    // Assert
+    expect({ minDelayMs, maxDelayMs, maxRetryAfterMs }).toEqual({
+      minDelayMs: BOT_POLICY.minDelayMs,
+      maxDelayMs: BOT_POLICY.maxDelayMs,
+      maxRetryAfterMs: BOT_POLICY.maxRetryAfterMs,
+    });
+  });
+
   it("makes one request at a time, with the random 2-5 s pause between requests", async () => {
     // Arrange
     const events: string[] = [];

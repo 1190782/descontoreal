@@ -5,6 +5,7 @@ export * from "./labels";
 export * from "./money";
 export * from "./normalize";
 export * from "./quality";
+export * from "./seo";
 export * from "./site";
 export * from "./stores";
 export * from "./time";
