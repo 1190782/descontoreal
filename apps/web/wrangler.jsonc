@@ -36,7 +36,14 @@
       "localConnectionString": "postgresql://postgres:postgres@127.0.0.1:54329/postgres",
     },
   ],
-  // The workers.dev address serves the site until descontoreal.pt is on Cloudflare.
+  // The site's address: Cloudflare creates its DNS record and certificate on deploy.
+  "routes": [
+    {
+      "pattern": "descontoreal.pt",
+      "custom_domain": true,
+    },
+  ],
+  // Stays on until descontoreal.pt is checked, then goes, so the site has one address.
   "workers_dev": true,
   "preview_urls": false,
   "observability": {
