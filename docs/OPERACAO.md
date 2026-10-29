@@ -209,6 +209,8 @@ O código é o mesmo; só muda a máquina (um VPS barato ou um computador em cas
 
 O site (`apps/web`, Next.js) corre no Cloudflare Workers através do OpenNext. O workflow "Deploy do site" faz o build e o deploy em Linux. Nunca faças o build do OpenNext no Windows nem com um `.env` na pasta: o OpenNext põe dentro do Worker todos os ficheiros `.env` que encontra, incluindo o da raiz, que tem os segredos da recolha.
 
+O site só responde em `https://descontoreal.pt`. O domínio está ligado ao Worker no `wrangler.jsonc` (Custom Domain: o deploy cria o registo DNS e o certificado), e o endereço `workers.dev` está desligado. No Cloudflare, o `www` tem um registo AAAA `100::` com proxy e uma Redirect Rule (301, com o caminho e a pesquisa) para o domínio, e o "Always Use HTTPS" (SSL/TLS → Edge Certificates) passa os pedidos em `http` para `https`.
+
 Segredos do GitHub do site, além dos da recolha:
 
 | Segredo                  | De onde vem                                                                                                                             |
@@ -260,7 +262,7 @@ Configuração, uma vez:
           has_function_privilege('web_ro', 'admin_approve_match(bigint)', 'execute') as pode_aprovar;
    ```
 
-2. Supabase → Authentication → URL Configuration → **Site URL**: o endereço do site (por agora o `*.workers.dev`; `https://descontoreal.pt` quando o domínio estiver ativo). O link do email usa-o.
+2. Supabase → Authentication → URL Configuration → **Site URL**: `https://descontoreal.pt`. O link do email usa-o.
 3. Authentication → Emails → **Magic link**: troca a ligação do modelo por `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}">Entrar no DescontoReal</a>`.
 4. Authentication → Sign In / Providers: desliga **Allow new users to sign up**. O formulário nunca cria contas, e assim também ninguém as cria pela API.
 5. Authentication → Users → Add user → **Create new user**: o teu email, uma password aleatória longa (não volta a ser usada) e **Auto Confirm User** ligado. Depois, no SQL Editor:

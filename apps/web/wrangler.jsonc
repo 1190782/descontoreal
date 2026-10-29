@@ -43,8 +43,8 @@
       "custom_domain": true,
     },
   ],
-  // Stays on until descontoreal.pt is checked, then goes, so the site has one address.
-  "workers_dev": true,
+  // One address for the site: no copy of it on workers.dev.
+  "workers_dev": false,
   "preview_urls": false,
   "observability": {
     "enabled": true,
