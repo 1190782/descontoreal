@@ -33,8 +33,10 @@ jobs:
           SITE: ${{ inputs.site_url || secrets.SITE_URL }}
         run: |
           site="${SITE%/}"
+          # sed reads to the end: head would close the pipe early, and pipefail fails the step on grep's SIGPIPE.
           first_path() {
-            curl -fsS "$site$1" | grep -o "<loc>[^<]*$2[^<]*</loc>" | head -1 | sed -E 's#</?loc>##g; s#^https?://[^/]+##'
+            curl -fsS "$site$1" | grep -o "<loc>[^<]*$2[^<]*</loc>" |
+              sed -n -E '1{s#</?loc>##g; s#^https?://[^/]+##; p}' || true
           }
           product=$(first_path /sitemaps/produtos.xml /p/)
           category=$(first_path /sitemaps/paginas.xml /c/)
