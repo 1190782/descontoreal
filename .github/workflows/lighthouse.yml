@@ -1,0 +1,99 @@
+name: Lighthouse
+
+# Measures the home page, a product and a category as a phone (Lighthouse's default), three runs each, and fails
+# when the median is below 90 in performance, accessibility or SEO. Manual only: scores on a shared runner vary.
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: Endereço do site (vazio usa o segredo SITE_URL)
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lighthouse:
+    name: Lighthouse no telemóvel
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # The sitemaps list addresses on SITE.url (descontoreal.pt); only their paths are measured, on the site given.
+      - name: Escolher as páginas
+        env:
+          SITE: ${{ inputs.site_url || secrets.SITE_URL }}
+        run: |
+          site="${SITE%/}"
+          first_path() {
+            curl -fsS "$site$1" | grep -o "<loc>[^<]*$2[^<]*</loc>" | head -1 | sed -E 's#</?loc>##g; s#^https?://[^/]+##'
+          }
+          product=$(first_path /sitemaps/produtos.xml /p/)
+          category=$(first_path /sitemaps/paginas.xml /c/)
+          if [ -z "$product" ] || [ -z "$category" ]; then
+            echo "::error::Sem produto ou categoria nos sitemaps de $site"
+            exit 1
+          fi
+          echo "PAGES=$site/ $site$product $site$category" >> "$GITHUB_ENV"
+
+      - name: Medir
+        run: |
+          mkdir -p relatorios
+          page_number=0
+          for page in $PAGES; do
+            page_number=$((page_number + 1))
+            for run in 1 2 3; do
+              npx -y lighthouse@13.5.0 "$page" --quiet --chrome-flags="--headless=new --no-sandbox" \
+                --only-categories=performance,accessibility,best-practices,seo \
+                --output=json --output=html --output-path="relatorios/pagina-$page_number-$run"
+            done
+          done
+
+      - name: Verificar as pontuações
+        run: |
+          node --input-type=module <<'EOF'
+          import { appendFileSync, readdirSync, readFileSync } from "node:fs";
+
+          const MIN_SCORE = 0.9;
+          const REQUIRED = ["performance", "accessibility", "seo"];
+          const COLUMNS = { performance: "Desempenho", accessibility: "Acessibilidade", "best-practices": "Boas práticas", seo: "SEO" };
+
+          const runsByPage = new Map();
+          for (const file of readdirSync("relatorios").filter((name) => name.endsWith(".report.json"))) {
+            const report = JSON.parse(readFileSync(`relatorios/${file}`, "utf8"));
+            runsByPage.set(report.requestedUrl, [...(runsByPage.get(report.requestedUrl) ?? []), report.categories]);
+          }
+
+          const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
+          const lines = [`| Página | ${Object.values(COLUMNS).join(" | ")} |`, `|---${"|---".repeat(4)}|`];
+          let failed = false;
+          for (const [page, runs] of runsByPage) {
+            const scores = Object.keys(COLUMNS).map((id) => [id, median(runs.map((categories) => categories[id].score))]);
+            failed ||= scores.some(([id, score]) => REQUIRED.includes(id) && score < MIN_SCORE);
+            lines.push(`| ${page} | ${scores.map(([, score]) => Math.round(score * 100)).join(" | ")} |`);
+          }
+
+          const table = lines.join("\n");
+          console.log(table);
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Mediana de 3 medições por página.\n\n${table}\n`);
+          if (failed) {
+            console.error(`::error::Abaixo de ${MIN_SCORE * 100} em desempenho, acessibilidade ou SEO.`);
+            process.exit(1);
+          }
+          EOF
+
+      - name: Guardar os relatórios
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: relatorios-lighthouse
+          path: relatorios/*.html
+          retention-days: 14
