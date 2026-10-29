@@ -2,6 +2,7 @@ import { activeStores, formatList, organizationJsonLd, SITE } from "@descontorea
 import type { Metadata, Viewport } from "next";
 import type { ReactElement, ReactNode } from "react";
 import { JsonLdScript } from "@/components/json-ld-script";
+import { PwaSupport } from "@/components/pwa-support";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
@@ -16,7 +17,8 @@ export const metadata: Metadata = {
     `Histórico de preços ${formatList(activeStores().map((store) => `da ${store.name}`))}, atualizado ` +
     "todos os dias, com rótulos que explicam cada desconto com números e datas.",
   applicationName: SITE.name,
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: "/favicon.svg", apple: "/icons/apple-touch-icon.png" },
+  appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "default" },
   openGraph: { siteName: SITE.name, locale: "pt_PT", type: "website" },
   formatDetection: { telephone: false, email: false, address: false },
 };
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }): React
           {children}
         </main>
         <SiteFooter />
+        <PwaSupport />
         <JsonLdScript data={organizationJsonLd()} />
       </body>
     </html>

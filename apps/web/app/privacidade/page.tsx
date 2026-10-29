@@ -42,6 +42,10 @@ export default function PrivacyPage(): ReactElement {
         de análise (ver <Link href="/cookies">Cookies</Link>).
       </p>
 
+      <p>
+        No teu browser, o site guarda só o número de visitas e a escolha sobre a sugestão de instalar a
+        aplicação, que nunca nos chegam (ver <Link href="/cookies">Cookies</Link>).
+      </p>
       <h2>Para quê e com que fundamento</h2>
       <ul>
         <li>

@@ -31,6 +31,19 @@ export default function CookiesPage(): ReactElement {
         Ao seguir uma ligação para uma loja, passa a valer a política de cookies dessa loja. Os cookies que a
         loja cria ficam no domínio da loja, não no nosso.
       </p>
+      <h2>Armazenamento no browser</h2>
+      <ul>
+        <li>
+          Para só sugerir a instalação da aplicação a partir da segunda visita, o site conta as visitas no
+          próprio browser (localStorage), e guarda aí a escolha &ldquo;Agora não&rdquo;. Estes dados nunca
+          saem do dispositivo e apagam-se nas definições do browser.
+        </li>
+        <li>
+          O service worker guarda no browser os ficheiros do site e uma página para quando não há ligação.
+          Nunca guarda preços nem dados pessoais.
+        </li>
+      </ul>
+
     </article>
   );
 }
