@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Its workerd build (cloudflare:sockets) only gets used when Next leaves it unbundled.
   serverExternalPackages: ["postgres"],
+  experimental: {
+    // The stylesheet is small; inlined, it no longer blocks the first paint of every page.
+    inlineCss: true,
+  },
   images: {
     loader: "custom",
     loaderFile: "./image-loader.ts",

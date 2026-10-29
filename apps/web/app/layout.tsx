@@ -1,13 +1,10 @@
 import { activeStores, formatList, organizationJsonLd, SITE } from "@descontoreal/core";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import type { ReactElement, ReactNode } from "react";
 import { JsonLdScript } from "@/components/json-ld-script";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -30,7 +27,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }): ReactElement {
   return (
-    <html lang="pt-PT" className={inter.variable}>
+    <html lang="pt-PT">
       <body className="flex min-h-screen flex-col font-sans">
         <a
           href="#conteudo"

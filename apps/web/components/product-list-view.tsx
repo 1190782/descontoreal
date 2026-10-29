@@ -159,6 +159,7 @@ export function ProductListView({ basePath, filters, data, withBrands }: Props):
         </ul>
       )}
 
+      <h2 className="sr-only">Produtos</h2>
       {list.items.length === 0 ? (
         <p className="text-slate-700">Nenhum produto com preço hoje corresponde a estes filtros.</p>
       ) : (
