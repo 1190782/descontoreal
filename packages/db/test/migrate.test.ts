@@ -7,7 +7,12 @@ import { createLocalPglite, pgliteExecutor } from "../src/local/pglite";
 import { applyMigrations, formatMigrationRun } from "../src/migrate";
 import { migrateThrough, SETUP_TIMEOUT_MS } from "./helpers/database";
 
-const VERSIONS = ["0001_init", "0002_rrp_partial_matching", "0003_touch_same_store_matching"];
+const VERSIONS = [
+  "0001_init",
+  "0002_rrp_partial_matching",
+  "0003_touch_same_store_matching",
+  "0004_admin_review",
+];
 
 describe("applyMigrations", () => {
   let template: PGlite;

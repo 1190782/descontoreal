@@ -232,9 +232,9 @@ describe("row level security and grants", () => {
       where n.nspname = 'public'
       order by p.proname`;
 
-    it.each(["anon", "authenticated"])("%s cannot run any of them", async (role) => {
+    it("anon cannot run any of them", async () => {
       // Arrange
-      const params = [role];
+      const params = ["anon"];
 
       // Act
       const result = await db.query<{ name: string; allowed: boolean }>(FUNCTIONS, params);
@@ -242,6 +242,23 @@ describe("row level security and grants", () => {
       // Assert
       expect(result.rows.length).toBeGreaterThan(0);
       expect(result.rows.filter((row) => row.allowed)).toEqual([]);
+    });
+
+    it("authenticated runs only the admin review functions, which refuse anyone but an admin", async () => {
+      // Arrange
+      const params = ["authenticated"];
+
+      // Act
+      const result = await db.query<{ name: string; allowed: boolean }>(FUNCTIONS, params);
+
+      // Assert
+      expect(result.rows.filter((row) => row.allowed).map((row) => row.name)).toEqual([
+        "admin_approve_match",
+        "admin_reject_match",
+        "admin_review_queue",
+        "admin_split_listing",
+        "is_admin",
+      ]);
     });
 
     it("service_role runs every one of them", async () => {

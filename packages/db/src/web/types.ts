@@ -130,3 +130,74 @@ export interface CategoryCount {
   /** Products with a current price, in the category itself (not its children). */
   products: number;
 }
+
+/** A store listing waiting for review, as admin_review_queue() (0004_admin_review.sql) shows it. */
+export interface ReviewListing {
+  id: number;
+  storeName: string;
+  sku: string;
+  title: string;
+  url: string;
+  imageUrl: string | null;
+  ean: string | null;
+  brand: string | null;
+  model: string | null;
+  /** null when the listing has no current price. */
+  priceCents: number | null;
+  inStock: boolean | null;
+}
+
+/** A product the listing may be: its cheapest current price and the stores that already list it. */
+export interface ReviewProduct {
+  id: number;
+  slug: string;
+  name: string;
+  imageUrl: string | null;
+  ean: string | null;
+  brand: string | null;
+  model: string | null;
+  priceCents: number | null;
+  stores: string[];
+}
+
+export interface ReviewCandidate {
+  candidateId: number;
+  /** Similarity of the two names (pg_trgm), 0 to 1. */
+  confidence: number;
+  listing: ReviewListing;
+  product: ReviewProduct;
+}
+
+export interface SameStoreListing {
+  id: number;
+  sku: string;
+  title: string;
+  url: string;
+  ean: string | null;
+  priceCents: number | null;
+  /** False without product page facts, and for the listing whose EAN is the product's. */
+  canSplit: boolean;
+}
+
+/** Listings of one store on one product: right when they share the product's EAN, otherwise linked before 0003. */
+export interface SameStoreGroup {
+  productId: number;
+  slug: string;
+  name: string;
+  ean: string | null;
+  storeName: string;
+  sharesEan: boolean;
+  listings: SameStoreListing[];
+}
+
+export interface ReviewQueue {
+  /** Every pending candidate; `candidates` holds the best 100. */
+  candidateCount: number;
+  candidates: ReviewCandidate[];
+  sameStore: SameStoreGroup[];
+}
+
+/** What approving, rejecting or splitting returns: the product pages to render again. */
+export interface ReviewOutcome {
+  slugs: string[];
+}

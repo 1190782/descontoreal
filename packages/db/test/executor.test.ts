@@ -40,6 +40,7 @@ describe("postgresExecutor", () => {
       "0001_init",
       "0002_rrp_partial_matching",
       "0003_touch_same_store_matching",
+      "0004_admin_review",
     ]);
     expect(seed.stores.inserted).toBe(4);
     expect(seed.categories.inserted).toBeGreaterThan(0);
