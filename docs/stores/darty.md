@@ -206,3 +206,4 @@ Para juntar uma página nova, guarda-a como servida e corre, na raiz do reposit�
 - Dados do produto: da mesma página, para artigos novos e de 7 em 7 dias.
 - Volume: 43 coleções ativas, por ordem de valor (≈ 4 h 26 min por dia), e 5 inativas. O `scrape.yml` corre com `--max-minutes 320`.
 - Sem `requestHeaders` nem `productPageUrl`: a página de produto é o próprio URL do artigo.
+- Retry-After (decisão do dono, 29/10/2026): a recolha de 29/10, que o GitHub só arrancou às 09:03 UTC, levou um único 503 com `Retry-After: 126` ao fim de 42 minutos e 617 pedidos, e a loja parou nesse dia, porque o limite era de 2 minutos. O bot passou a esperar até 5 minutos (`BOT_POLICY.maxRetryAfterMs`), e a recolha diária a começar às 02:17 UTC, fora da hora certa, que o agendador do GitHub mais atrasa.

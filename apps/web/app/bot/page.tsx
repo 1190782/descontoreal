@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 const MS_PER_SECOND = 1000;
 const MS_PER_MINUTE = 60_000;
 
-function hourText(hour: number): string {
-  return `${String(hour).padStart(2, "0")}:00`;
+function timeText(hour: number, minute: number): string {
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 }
 
 export default function BotPage(): ReactElement {
   const stores = formatList(activeStores().map((store) => store.name));
-  const runHour = BOT_POLICY.dailyRunHourUtc;
+  const { hour, minute } = BOT_POLICY.dailyRunUtc;
   return (
     <article className="prose">
       <h1>DescontoRealBot</h1>
@@ -61,8 +61,8 @@ export default function BotPage(): ReactElement {
         </li>
         <li>Se o robots.txt da loja pedir uma pausa maior (Crawl-delay), o bot usa essa.</li>
         <li>
-          Uma recolha por dia, que começa às {hourText(runHour)} UTC ({hourText(runHour)} em Lisboa no
-          inverno, {hourText(runHour + 1)} no verão), quando os sites têm menos visitas.
+          Uma recolha por dia, que começa às {timeText(hour, minute)} UTC ({timeText(hour, minute)} em Lisboa
+          no inverno, {timeText(hour + 1, minute)} no verão), quando os sites têm menos visitas.
         </li>
       </ul>
 

@@ -15,7 +15,10 @@ export const BOT_POLICY = {
   minDelayMs: 2000,
   maxDelayMs: 5000,
   /** A store that asks us to wait longer than this (Retry-After) stops the collection for the day. */
-  maxRetryAfterMs: 120_000,
-  /** Hour (UTC) the daily collection starts, as in the cron of .github/workflows/scrape.yml. */
-  dailyRunHourUtc: 3,
+  maxRetryAfterMs: 300_000,
+  /**
+   * When (UTC) the daily collection starts, as in the cron of .github/workflows/scrape.yml. Off the full hour, when
+   * GitHub's scheduler is busiest and delays runs the most.
+   */
+  dailyRunUtc: { hour: 2, minute: 17 },
 } as const;

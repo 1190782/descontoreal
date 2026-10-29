@@ -385,6 +385,21 @@ describe("StoreFetcher retries", () => {
     expect(sleeps).toEqual([7000]);
   });
 
+  it("waits out a Retry-After of a couple of minutes, as Darty's 126 s, instead of stopping the store", async () => {
+    // Arrange
+    const { fetcher, calls, sleeps } = setup({
+      [PAGE]: [textResponse("busy", 503, { "Retry-After": "126" }), textResponse("ok")],
+    });
+
+    // Act
+    const page = await fetcher.fetchPage(PAGE);
+
+    // Assert
+    expect(page.body).toBe("ok");
+    expect(urlsOf(calls)).toEqual([ROBOTS, PAGE, PAGE]);
+    expect(sleeps).toEqual([126_000]);
+  });
+
   it.each([429, 503])(
     "stops the store for the day, naming Retry-After, when a %i asks to wait longer than the cap",
     async (status) => {
@@ -400,7 +415,7 @@ describe("StoreFetcher retries", () => {
       // Assert
       expect(outcomesOf(results)).toEqual(["StoreBlockedError", "StoreBlockedError"]);
       expect((results[0] as StoreBlockedError).message).toBe(
-        `darty asks us to stay away: HTTP ${status} with Retry-After 3600 s, longer than the 120 s we wait`,
+        `darty asks us to stay away: HTTP ${status} with Retry-After 3600 s, longer than the ${BOT_POLICY.maxRetryAfterMs / 1000} s we wait`,
       );
       expect(urlsOf(calls)).toEqual([ROBOTS, PAGE]);
     },
