@@ -35,7 +35,9 @@ Plano completo: @docs/PLANO.md (só local, fora do git)
 - Scrapers: um pedido de cada vez por loja, 2 a 5 s entre pedidos,
   User-Agent DescontoRealBot, respeitar robots.txt.
 - Antes de um scraper novo: docs/stores/<loja>.md e fixtures (usa /nova-loja).
-- Páginas públicas em Server Components, com os dados no HTML inicial.
+- Páginas públicas em Server Components, com os dados no HTML inicial. Nunca leem cookies nem a
+  sessão: só /admin tem sessão (middleware.ts), para as outras ficarem em cache.
+- Build do OpenNext só no GitHub Actions: põe no Worker os .env que encontrar.
 - Segredos só em variáveis de ambiente. A chave de serviço do Supabase nunca chega ao browser.
 - Lógica de negócio em packages/core, sempre com testes unitários.
 - Commits pequenos, no formato feat:, fix:, chore:.

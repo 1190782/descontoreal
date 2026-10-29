@@ -226,6 +226,8 @@ Como as páginas se mantêm atualizadas:
 
 Se um deploy correr mal: Cloudflare → Workers & Pages → `descontoreal-web` → Deployments → escolhe a versão anterior → Rollback. Depois corrige o código e faz push; o deploy seguinte substitui a versão reposta.
 
+Para medir o site como um telemóvel: Actions → "Lighthouse" → Run workflow. Mede a página de início, o primeiro produto e a primeira categoria dos sitemaps, três vezes cada, e falha se a mediana ficar abaixo de 90 em desempenho, acessibilidade ou SEO. Sem endereço, usa o segredo `SITE_URL`. Os relatórios ficam nos artefactos da execução durante 14 dias.
+
 Para trabalhar no site localmente, com dados inventados (nunca com a produção):
 
 ```bash
@@ -241,3 +243,45 @@ pnpm dev                                # http://localhost:3000, lê a base loca
 ```
 
 O `pnpm db:demo` só escreve numa base de dados local e recusa qualquer outro endereço.
+
+### Administração
+
+A página `/admin/correspondencias` mostra as sugestões de correspondência por rever (aprovar ou rejeitar) e os produtos com mais do que um artigo da mesma loja (separar). Só entra quem tem `app_metadata.role = 'admin'` no Supabase Auth. O pedido do link faz-se em `/entrar`, e o link abre `/auth/confirm`, que só faz entrar no botão "Entrar": alguns serviços de email abrem os links para os analisar, e o link só funciona uma vez. A sessão fica em cookies que o browser só envia para `/admin`; "Sair" termina-a nesse browser.
+
+As decisões correm nas funções da migração `0004_admin_review.sql`, com a sessão de quem está a rever: a base de dados recusa quem não é administrador, e o Worker nunca tem a chave de serviço. Cada decisão volta a gerar as páginas dos produtos que mudaram.
+
+Configuração, uma vez:
+
+1. Aplica a migração 0004 à produção (ver "Migrações da base de dados") antes do push que traz estas páginas. Depois confirma no SQL Editor que o papel do site, `web_ro`, não chega a estas funções (as três colunas têm de dar `false`):
+
+   ```sql
+   select pg_has_role('web_ro', 'authenticated', 'member') as em_authenticated,
+          pg_has_role('web_ro', 'service_role', 'member') as em_service_role,
+          has_function_privilege('web_ro', 'admin_approve_match(bigint)', 'execute') as pode_aprovar;
+   ```
+
+2. Supabase → Authentication → URL Configuration → **Site URL**: o endereço do site (por agora o `*.workers.dev`; `https://descontoreal.pt` quando o domínio estiver ativo). O link do email usa-o.
+3. Authentication → Emails → **Magic link**: troca a ligação do modelo por `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}">Entrar no DescontoReal</a>`.
+4. Authentication → Sign In / Providers: desliga **Allow new users to sign up**. O formulário nunca cria contas, e assim também ninguém as cria pela API.
+5. Authentication → Users → Add user → **Create new user**: o teu email, uma password aleatória longa (não volta a ser usada) e **Auto Confirm User** ligado. Depois, no SQL Editor:
+
+   ```sql
+   update auth.users
+   set raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}'
+   where email = 'o-teu-email@exemplo.pt';
+
+   select email, raw_app_meta_data ->> 'role' as papel from auth.users;
+   ```
+
+   O papel entra na sessão seguinte: se já tinhas entrado, sai e entra outra vez.
+
+6. GitHub → Settings → Secrets and variables → Actions → separador **Variables** (não Secrets: são valores públicos):
+
+   | Variável                               | De onde vem                                                                        |
+   | -------------------------------------- | ---------------------------------------------------------------------------------- |
+   | `NEXT_PUBLIC_SUPABASE_URL`             | Supabase → Project Settings → Data API → Project URL (`https://<ref>.supabase.co`) |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API Keys → Publishable key (`sb_publishable_…`)      |
+
+   O build do site escreve-as no Worker: depois de as mudar, corre outra vez o workflow "Deploy do site".
+
+Sem SMTP próprio, o Supabase só envia emails para os membros da organização no Supabase, no máximo 2 por hora. Chega para o administrador; o envio pelo Resend fica para a fase 3, com as contas públicas.
