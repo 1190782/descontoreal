@@ -17,8 +17,13 @@ export default function CookiesPage(): ReactElement {
 
       <h2>O que usamos</h2>
       <ul>
-        <li>As páginas do site não criam cookies.</li>
+        <li>As páginas públicas do site não criam cookies.</li>
         <li>Não usamos cookies de publicidade nem de análise de tráfego.</li>
+        <li>
+          A área de administração, só para o responsável pelo site, usa os cookies de sessão do Supabase (
+          <code>sb-…-auth-token</code>) depois de entrar. São estritamente necessários e o browser só os envia
+          para as páginas <code>/admin</code>.
+        </li>
         <li>
           A Cloudflare, que protege o site, pode criar um cookie técnico (por exemplo,{" "}
           <code>cf_clearance</code>) quando um pedido tem de passar por uma verificação contra abusos. É
@@ -26,11 +31,6 @@ export default function CookiesPage(): ReactElement {
         </li>
       </ul>
 
-      <h2>Lojas</h2>
-      <p>
-        Ao seguir uma ligação para uma loja, passa a valer a política de cookies dessa loja. Os cookies que a
-        loja cria ficam no domínio da loja, não no nosso.
-      </p>
       <h2>Armazenamento no browser</h2>
       <ul>
         <li>
@@ -44,6 +44,11 @@ export default function CookiesPage(): ReactElement {
         </li>
       </ul>
 
+      <h2>Lojas</h2>
+      <p>
+        Ao seguir uma ligação para uma loja, passa a valer a política de cookies dessa loja. Os cookies que a
+        loja cria ficam no domínio da loja, não no nosso.
+      </p>
     </article>
   );
 }

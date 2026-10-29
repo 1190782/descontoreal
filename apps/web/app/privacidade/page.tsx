@@ -36,16 +36,21 @@ export default function PrivacyPage(): ReactElement {
           mensagem. A Cloudflare reencaminha as mensagens para a caixa de correio pessoal do responsável, onde
           ficam enquanto forem precisas para tratar o assunto.
         </li>
+        <li>
+          <strong>Entrada na administração.</strong> O formulário de entrada (<code>/entrar</code>), só para o
+          responsável, envia o endereço escrito ao Supabase, que só manda o link para entrar se esse endereço
+          tiver acesso.
+        </li>
       </ul>
+      <p>
+        No teu browser, o site guarda só o número de visitas e a escolha sobre a sugestão de instalar a
+        aplicação, que nunca nos chegam (ver <Link href="/cookies">Cookies</Link>).
+      </p>
       <p>
         O site não tem contas abertas ao público, não mostra publicidade e não usa cookies de publicidade nem
         de análise (ver <Link href="/cookies">Cookies</Link>).
       </p>
 
-      <p>
-        No teu browser, o site guarda só o número de visitas e a escolha sobre a sugestão de instalar a
-        aplicação, que nunca nos chegam (ver <Link href="/cookies">Cookies</Link>).
-      </p>
       <h2>Para quê e com que fundamento</h2>
       <ul>
         <li>
@@ -62,8 +67,8 @@ export default function PrivacyPage(): ReactElement {
           email.
         </li>
         <li>
-          Supabase, Inc.: base de dados dos preços, alojada na União Europeia (Paris). Não guarda dados de
-          quem visita o site.
+          Supabase, Inc.: base de dados dos preços e entrada na administração, alojada na União Europeia
+          (Paris). Não guarda dados de quem visita o site.
         </li>
       </ul>
       <p>
